@@ -81,9 +81,9 @@ function analyze(){
  const t=document.createElement('canvas');t.width=W;t.height=H;const tc=t.getContext('2d');tc.drawImage(img,0,0,W,H);
  const d=tc.getImageData(0,0,W,H).data,px=new Float32Array(W*H*3);
  for(let i=0;i<W*H;i++){px[i*3]=d[i*4];px[i*3+1]=d[i*4+1];px[i*3+2]=d[i*4+2]}
- const {lab,cen}=kmeans(px,7),names=cen.map(c=>classify(...c)),map=new Array(W*H),tot={};
+ const {lab,cen}=kmeans(px,10),names=cen.map(c=>classify(...c)),map=new Array(W*H),tot={};
  for(let i=0;i<W*H;i++){map[i]=names[lab[i]];tot[map[i]]=(tot[map[i]]||0)+1}
- const feats=Object.keys(tot).map(k=>({k,pct:tot[k]/(W*H)*100,pos:biggest(map,W,H,k)})).filter(f=>f.pct>=3).sort((a,b)=>b.pct-a.pct);
+ const feats=Object.keys(tot).map(k=>({k,pct:tot[k]/(W*H)*100,pos:biggest(map,W,H,k)})).filter(f=>f.pct>=1.5).sort((a,b)=>b.pct-a.pct);
  res={W,H,map,feats};draw();report()}
 function draw(){ctx.drawImage(img,0,0,cv.width,cv.height);if(!res||!show)return;
  const {W,H,map,feats}=res,sx=cv.width/W,sy=cv.height/H,keep=new Set(feats.map(f=>f.k));
